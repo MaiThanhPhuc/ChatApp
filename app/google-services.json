@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "423913081036",
+    "firebase_url": "https://chatapp-eacfa-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "chatapp-eacfa",
+    "storage_bucket": "chatapp-eacfa.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:423913081036:android:eb04cf24b8160cc9881a69",
+        "android_client_info": {
+          "package_name": "com.android.chatapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "423913081036-ikbsa8n63sj3dv533tuvvep1dplkk2e0.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCn7m3FTlsEYcDtZu0Wa3zVE6-uQH78mZQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "423913081036-ikbsa8n63sj3dv533tuvvep1dplkk2e0.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
