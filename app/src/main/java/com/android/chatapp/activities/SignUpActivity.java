@@ -1,23 +1,140 @@
 package com.android.chatapp.activities;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+
+import android.app.ProgressDialog;
 import android.content.Intent;
 
+import android.net.Uri;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Toast;
 
 import com.android.chatapp.R;
 import com.android.chatapp.databinding.ActivitySignUpBinding;
+import com.android.chatapp.model.User;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 public class SignUpActivity extends AppCompatActivity {
-    private ActivitySignUpBinding binding;
+    private ActivitySignUpBinding signUpBinding;
+    private FirebaseAuth myAuth;
+    FirebaseDatabase database;
+    ProgressDialog dialog;
+    FirebaseStorage storage;
+    Uri file;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = ActivitySignUpBinding.inflate(getLayoutInflater());
-        setContentView(binding.getRoot());
+        signUpBinding = ActivitySignUpBinding.inflate(getLayoutInflater());
+        setContentView(signUpBinding.getRoot());
+        myAuth = FirebaseAuth.getInstance();
+        database = FirebaseDatabase.getInstance();
+        controlsHandle();
         setListener();
+        eventsHandle();
     }
     private void setListener(){
-        binding.textSignIn.setOnClickListener(e -> onBackPressed());
+        signUpBinding.textSignIn.setOnClickListener(e -> onBackPressed());
+    }
+    private void eventsHandle() {
+        signUpBinding.buttonSignUp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String username = signUpBinding.inputName.getText().toString();
+                String password = signUpBinding.inputPassword.getText().toString();
+                String rePassword = signUpBinding.inputRePassword.getText().toString();
+                String email = signUpBinding.inputEmail.getText().toString();
+
+                if (!username.isEmpty() &&
+                        !password.isEmpty() &&
+                        !email.isEmpty() && rePassword.equals(password)){
+                    dialog.show();
+                    myAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<AuthResult> task) {
+                            dialog.dismiss();
+                            if (task.isSuccessful()) {
+                                String uid = task.getResult().getUser().getUid();
+                                User user = new User(username,uid,password, email);
+                                database.getReference().child("User").child(uid).setValue(user);
+
+                                Toast.makeText(SignUpActivity.this, "Create account successfully", Toast.LENGTH_LONG).show();
+                            }
+                            else {
+                                Toast.makeText(SignUpActivity.this, task.getException().toString(), Toast.LENGTH_LONG).show();
+                            }
+                        }
+                    });
+//                    StorageReference storageReference = FirebaseStorage.getInstance().getReference();
+//                    storageReference.putFile(file)
+//                            .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>(){
+//                                @Override
+//                                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+//                                    storageReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+//                                        @Override
+//                                        public void onSuccess(Uri uri) {
+//                                            database.getReference().child("User").child(myAuth.getUid())
+//                                                    .child("profilePictureLink").setValue(uri.toString());
+//                                        }
+//                                    }).addOnFailureListener(new OnFailureListener() {
+//                                        @Override
+//                                        public void onFailure(@NonNull Exception e) {
+//
+//                                            Toast.makeText(SignUpActivity.this,"Failed to Upload",Toast.LENGTH_SHORT).show();
+//
+//
+//                                        }
+//                                    });
+//                                }
+//                            }).addOnFailureListener(new OnFailureListener() {
+//                                @Override
+//                                public void onFailure(@NonNull Exception e) {
+//
+//                                Toast.makeText(SignUpActivity.this,e.getMessage(),Toast.LENGTH_SHORT).show();
+//                            }
+//                    });;
+                }
+                else {
+                    Toast.makeText(SignUpActivity.this, "Missing info", Toast.LENGTH_LONG).show();
+                }
+
+            }
+        });
+        signUpBinding.imageProfile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent();
+                intent.setAction(Intent.ACTION_GET_CONTENT);
+                intent.setType("image/*");
+                startActivityForResult(intent, 23);
+            }
+        });
+
+    }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (data.getData() != null) {
+            file = data.getData();
+            signUpBinding.imageProfile.setImageURI(file);
+            signUpBinding.textAddImg.setVisibility(View.INVISIBLE);
+        }
+    }
+    private void controlsHandle() {
+        dialog = new ProgressDialog(SignUpActivity.this);
+        dialog.setTitle("Pending");
+        dialog.setCanceledOnTouchOutside(false);
+
     }
 }

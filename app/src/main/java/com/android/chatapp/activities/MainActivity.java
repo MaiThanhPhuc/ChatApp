@@ -29,7 +29,7 @@ public class MainActivity extends AppCompatActivity {
         binding.fabNewChat.setOnClickListener(e ->
                 startActivity(new Intent(getApplicationContext(),UsersActivity.class)));
     }
-//    private void LoadUserDetails(){
+    //    private void LoadUserDetails(){
 //        binding.textName.setText(preferenceManager.getString(Constants.KEY_NAME));
 //        byte[] bytes= Base64. decode(preferenceManager.getString(Constants.KEY_IMAGE), Base64. DEFAULT);
 //        Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
