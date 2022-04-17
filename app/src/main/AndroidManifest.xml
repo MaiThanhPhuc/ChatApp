@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.android.chatapp">
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
-    <uses-permission android:name="android.permission.REQUEST_COMPANION_RUN_IN_BACKGROUND"/>
-    <uses-permission android:name="REQUEST_COMPANION_START_FOREGROUND_SERVICES_FROM_BACKGROUND"/>
+
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.REQUEST_COMPANION_RUN_IN_BACKGROUND" />
+    <uses-permission android:name="REQUEST_COMPANION_START_FOREGROUND_SERVICES_FROM_BACKGROUND" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -11,6 +13,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.ChatApp">
+        <activity
+            android:name=".activities.ChatActivity"
+            android:exported="false" />
         <activity
             android:name=".activities.UsersActivity"
             android:exported="false" />
