@@ -148,7 +148,7 @@
         android:background="@color/green"
         android:gravity="center"
         android:padding="2dp"
-        android:text="@string/online"
+        android:text=""
         android:textColor="@color/white"
         android:textSize="@dimen/_10sdp"
         android:visibility="visible"

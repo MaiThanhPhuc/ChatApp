@@ -5,6 +5,7 @@ public class ChatMessage {
     private String senderId, message;
     private Long dateTime;
 
+
     public String getSenderId() {
         return senderId;
     }

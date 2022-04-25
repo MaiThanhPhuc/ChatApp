@@ -35,6 +35,7 @@
         app:layout_constraintBottom_toTopOf="@id/viewSupporter"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/imageProfile" />
+
     <TextView
         android:id="@+id/textRecentMessage"
         android:layout_width="0dp"
@@ -46,6 +47,7 @@
         android:textColor="@color/secondary_text"
         android:textSize="@dimen/_12ssp"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.09"
         app:layout_constraintStart_toEndOf="@id/imageProfile"
         app:layout_constraintTop_toBottomOf="@id/viewSupporter" />
 </androidx.constraintlayout.widget.ConstraintLayout>

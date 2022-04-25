@@ -10,8 +10,8 @@ import android.view.View;
 
 import com.android.chatapp.R;
 import com.android.chatapp.adapter.ChatAdapter;
+
 import com.android.chatapp.databinding.ActivityChatBinding;
-import com.android.chatapp.databinding.ActivitySignUpBinding;
 import com.android.chatapp.model.ChatMessage;
 import com.android.chatapp.model.User;
 import com.android.chatapp.utilities.Constants;
@@ -21,6 +21,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
@@ -97,7 +98,6 @@ public class  ChatActivity extends AppCompatActivity {
                         chatMessages.clear();
                         for (DataSnapshot dataSnapshot: snapshot.getChildren()) {
                             ChatMessage message = dataSnapshot.getValue(ChatMessage.class);
-                            message.setChatId(dataSnapshot.getKey());
                             chatMessages.add(message);
                         }
                         chatAdapter.notifyDataSetChanged();
@@ -123,6 +123,24 @@ public class  ChatActivity extends AppCompatActivity {
         receiverUser.setEmail(email);
         receiverUser.setProfilePictureLink(proPicLink);
         receiverUser.setUsername(receiverUserName);
+
+        DatabaseReference databaseReference =
+                database.getReference().child("User").child(receiverUID).child("isOnline");
+        databaseReference.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DataSnapshot> task) {
+                if (task.getResult().getValue() == null)
+                    chatBinding.textAvailability.setText("Offline");
+                else {
+                    if (task.isSuccessful() && task.getResult().getValue() != null) {
+                        boolean isOnline = (boolean) task.getResult().getValue();
+                        if (isOnline) chatBinding.textAvailability.setText("Online");
+                        else chatBinding.textAvailability.setText("Offline");
+                    }
+                }
+
+            }
+        });
 
         chatBinding.textName.setText(receiverUserName);
 

@@ -6,6 +6,16 @@ public class User {
     String password;
     String email;
     String profilePictureLink;
+    boolean isOnline;
+
+    public boolean isOnline() {
+        return isOnline;
+    }
+
+    public void setOnline(boolean online) {
+        isOnline = online;
+    }
+
     public User(String username, String userID, String password, String email) {
         this.username = username;
         this.userID = userID;
