@@ -73,6 +73,7 @@ public class MainActivity extends AppCompatActivity {
         database.getReference().child("User").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
+                users.clear();
                 for (DataSnapshot data: snapshot.getChildren()) {
                     User user = data.getValue(User.class);
                     String senderRoom = myAuth.getUid() + user.getUserID();

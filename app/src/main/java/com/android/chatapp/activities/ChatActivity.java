@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
 
@@ -129,13 +130,18 @@ public class  ChatActivity extends AppCompatActivity {
         databaseReference.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DataSnapshot> task) {
-                if (task.getResult().getValue() == null)
+                if (task.getResult().getValue() == null) {
                     chatBinding.textAvailability.setText("Offline");
+                    chatBinding.textAvailability.setBackgroundColor(Color.rgb(255, 0, 0));
+                }
                 else {
                     if (task.isSuccessful() && task.getResult().getValue() != null) {
                         boolean isOnline = (boolean) task.getResult().getValue();
                         if (isOnline) chatBinding.textAvailability.setText("Online");
-                        else chatBinding.textAvailability.setText("Offline");
+                        else {
+                            chatBinding.textAvailability.setText("Offline");
+                            chatBinding.textAvailability.setBackgroundColor(Color.rgb(255, 0, 0));
+                        }
                     }
                 }
 
