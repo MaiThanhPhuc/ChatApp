@@ -70,14 +70,25 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void getRecentChat(){
-        database.getReference().child("User").child(myAuth.getUid()).child("recentChat").addValueEventListener(new ValueEventListener() {
+        database.getReference().child("User").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for (DataSnapshot data: snapshot.getChildren()) {
                     User user = data.getValue(User.class);
                     String senderRoom = myAuth.getUid() + user.getUserID();
+                    DatabaseReference databaseReference = database.getReference().child("chat").child(senderRoom);
+//                    final boolean[] temp = {true};
+////                    databaseReference.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+////                        @Override
+////                        public void onComplete(@NonNull Task<DataSnapshot> task) {
+////                            if (task!= null)
+////                                temp[0] = true;
+////                            else temp[0] =false;
+////                        }
+////                    });
                     users.add(user);
                 }
+
                 recentConversationAdapter.notifyDataSetChanged();
 
             }
@@ -117,8 +128,8 @@ public class MainActivity extends AppCompatActivity {
         Toast.makeText(getApplicationContext(), mess, Toast.LENGTH_SHORT).show();
     }
     private void signOut() {
-        database.getReference().child("User").child(myAuth.getUid()).child("isOnline").setValue(false);
         myAuth.signOut();
+        database.getReference().child("User").child(myAuth.getUid()).child("isOnline").setValue(false);
         Intent signOut = new Intent(MainActivity.this, SignInActivity.class);
         startActivity(signOut);
     }

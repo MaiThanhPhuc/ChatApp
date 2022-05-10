@@ -16,4 +16,8 @@
     <string name="select_user">Select User</string>
     <string name="type_a_message">Type a message</string>
     <string name="online">Online</string>
+    <string name="setting_profile">Setting Profile</string>
+    <string name="change_name">Change name:</string>
+    <string name="change_image">Change Image</string>
+    <string name="save_change">Save change</string>
 </resources>

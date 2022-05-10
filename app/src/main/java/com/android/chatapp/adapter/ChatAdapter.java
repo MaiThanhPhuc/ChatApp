@@ -1,7 +1,11 @@
 package com.android.chatapp.adapter;
 
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
@@ -22,7 +26,6 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private final List<ChatMessage> chatMessages;
     private final String imageReceiverLink;
     private final String senderId;
-
     public static final int VIEW_TYPE_SENT = 1;
     public static final int VIEW_TYPE_RECEIVER = 2;
 
@@ -55,6 +58,29 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         else {
             ((ReceiverMessageViewHolder) holder).setData(chatMessages.get(position),imageReceiverLink);
         }
+// Delete message
+//        holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+//            @Override
+//            public boolean onLongClick(View v) {
+//                new AlertDialog.Builder(context)
+//                        .setTitle("Delete")
+//                        .setMessage("Are you sure you want to delete this message")
+//                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+//                            @Override
+//                            public void onClick(DialogInterface dialogInterface, int i) {
+//
+//                            }
+//                        }).setNegativeButton("No", new DialogInterface.OnClickListener() {
+//                    @Override
+//                    public void onClick(DialogInterface dialogInterface, int i) {
+//                        dialogInterface.dismiss();
+//                    }
+//                }).show();
+//                return false;
+//            }
+//        });
+        // End Delete message
+
     }
 
     @Override
@@ -97,7 +123,7 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             Date date = new Date(chatMessage.getDateTime());
             SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd hh:mm a");
             binding.textMessage.setText(chatMessage.getMessage());
-            binding.textDateTime.setText(format.format(date));
+            binding.textDateTime.setText(format .format(date));
             Picasso.get().load(profilePictureLink).placeholder(R.drawable.avatar3).into(binding.imageProfile);
         }
     }
