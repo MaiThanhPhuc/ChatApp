@@ -82,6 +82,7 @@ public class SettingActivity extends AppCompatActivity {
                 String currentPassword = binding.inputCurrentPassword.getText().toString();
                 if (!userName.equals("")){
                     database.getReference().child("User").child(myAuth.getUid()).child("username").setValue(userName);
+                    Toast.makeText(SettingActivity.this, "Change username successfully!!!", Toast.LENGTH_SHORT).show();
                 }
                 if (!password.equals("") && !currentPassword.equals("")){
                     AuthCredential credential = EmailAuthProvider.getCredential(myAuth.getCurrentUser().getEmail(),currentPassword);
@@ -93,8 +94,9 @@ public class SettingActivity extends AppCompatActivity {
                                 user.updatePassword(password).addOnCompleteListener(new OnCompleteListener<Void>() {
                                     @Override
                                     public void onComplete(@NonNull Task<Void> task) {
-                                        if(!task.isSuccessful()){
+                                        if(task.isSuccessful()){
                                             database.getReference().child("User").child(myAuth.getUid()).child("password").setValue(password);
+                                            Toast.makeText(SettingActivity.this, "Change password successfully!!!", Toast.LENGTH_SHORT).show();
                                         }else {
                                             Toast.makeText(SettingActivity.this, task.getException().toString(), Toast.LENGTH_SHORT).show();
 
