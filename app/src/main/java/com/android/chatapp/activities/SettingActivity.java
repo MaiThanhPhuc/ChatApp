@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -15,6 +16,8 @@ import com.android.chatapp.databinding.ActivityMainBinding;
 import com.android.chatapp.databinding.ActivitySettingBinding;
 import com.android.chatapp.model.User;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.AuthCredential;
@@ -25,6 +28,9 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
 
 public class SettingActivity extends AppCompatActivity {
@@ -32,6 +38,7 @@ public class SettingActivity extends AppCompatActivity {
     private FirebaseAuth myAuth;
     private FirebaseDatabase database;
     Uri file;
+    FirebaseStorage storage;
     boolean changeImg;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,7 +57,7 @@ public class SettingActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 user[0] = snapshot.getValue(User.class);
-                binding.inputName.setText(user[0].getUsername());
+                binding.inputName.setHint(user[0].getUsername());
                 Picasso.get().load(user[0].getProfilePictureLink()).placeholder(R.drawable.avatar3).into(binding.imageProfile);
             }
 
@@ -110,6 +117,30 @@ public class SettingActivity extends AppCompatActivity {
                     });
 
                 }
+                if (changeImg){
+                    //Up Image profile
+                    StorageReference ref = storage.getReference().child("ProfilePicture")
+                            .child(myAuth.getUid());
+                    ref.putFile(file).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                            ref.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                @Override
+                                public void onSuccess(Uri uri) {
+                                    database.getReference().child("User").child(myAuth.getUid())
+                                            .child("profilePictureLink").setValue(uri.toString());
+                                }
+                            });
+                            Toast.makeText(SettingActivity.this, "Change image profile successfully!!!", Toast.LENGTH_SHORT).show();
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+
+                            Log.e("Image",e.getMessage());
+                        }
+                    });
+                }
             }
         });
         binding.imageBack.setOnClickListener(e -> onBackPressed());
@@ -128,5 +159,6 @@ public class SettingActivity extends AppCompatActivity {
         changeImg = false;
         myAuth = FirebaseAuth.getInstance();
         database = FirebaseDatabase.getInstance();
+        storage = FirebaseStorage.getInstance();
     }
 }
