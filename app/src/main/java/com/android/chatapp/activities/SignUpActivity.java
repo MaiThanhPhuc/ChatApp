@@ -71,7 +71,7 @@ public class SignUpActivity extends AppCompatActivity {
 
                 if (!username.isEmpty() &&
                         !password.isEmpty() &&
-                        !email.isEmpty() && rePassword.equals(password) && file!=null){
+                        !email.isEmpty() && rePassword.equals(password)){
                     dialog.show();
                     myAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                         @Override
@@ -114,8 +114,6 @@ public class SignUpActivity extends AppCompatActivity {
                     });
                 }
                 else {
-                    if (file==null)
-                        Toast.makeText(SignUpActivity.this, "Image Require", Toast.LENGTH_SHORT).show();
                     Toast.makeText(SignUpActivity.this, "Missing info", Toast.LENGTH_LONG).show();
                 }
 

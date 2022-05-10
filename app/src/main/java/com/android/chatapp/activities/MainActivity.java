@@ -32,6 +32,7 @@ import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.prefs.PreferenceChangeEvent;
 
 public class MainActivity extends AppCompatActivity {
@@ -70,25 +71,13 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void getRecentChat(){
-        database.getReference().child("User").addValueEventListener(new ValueEventListener() {
+        database.getReference().child("User").child(myAuth.getUid()).child("recentChat").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for (DataSnapshot data: snapshot.getChildren()) {
                     User user = data.getValue(User.class);
-                    String senderRoom = myAuth.getUid() + user.getUserID();
-                    DatabaseReference databaseReference = database.getReference().child("chat").child(senderRoom);
-//                    final boolean[] temp = {true};
-////                    databaseReference.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
-////                        @Override
-////                        public void onComplete(@NonNull Task<DataSnapshot> task) {
-////                            if (task!= null)
-////                                temp[0] = true;
-////                            else temp[0] =false;
-////                        }
-////                    });
                     users.add(user);
                 }
-
                 recentConversationAdapter.notifyDataSetChanged();
 
             }
@@ -104,6 +93,9 @@ public class MainActivity extends AppCompatActivity {
         binding.imageSignOut.setOnClickListener(e -> signOut());
         binding.fabNewChat.setOnClickListener(e ->
                 startActivity(new Intent(getApplicationContext(),UsersActivity.class)));
+        binding.imageProfile.setOnClickListener(e -> startActivity(
+                new Intent(getApplicationContext(), SettingActivity.class)));
+
     }
     private void LoadUserDetails(){
         final User[] user = {new User()};
@@ -128,8 +120,8 @@ public class MainActivity extends AppCompatActivity {
         Toast.makeText(getApplicationContext(), mess, Toast.LENGTH_SHORT).show();
     }
     private void signOut() {
-        myAuth.signOut();
         database.getReference().child("User").child(myAuth.getUid()).child("isOnline").setValue(false);
+        myAuth.signOut();
         Intent signOut = new Intent(MainActivity.this, SignInActivity.class);
         startActivity(signOut);
     }

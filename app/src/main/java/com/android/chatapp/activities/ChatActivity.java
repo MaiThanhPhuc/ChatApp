@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
 
@@ -38,7 +39,7 @@ public class  ChatActivity extends AppCompatActivity {
     private User receiverUser ;
     List<ChatMessage> chatMessages = new ArrayList<>();;
     ChatAdapter chatAdapter;
-
+    private User senderUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +58,13 @@ public class  ChatActivity extends AppCompatActivity {
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(ChatActivity.this);
         chatBinding.chatRecyclerView.setLayoutManager(layoutManager);
+
+        database.getReference().child("User").child(myAuth.getUid()).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DataSnapshot> task) {
+                senderUser = task.getResult().getValue(User.class);
+            }
+        });
     }
 
     private void sendMessage(){
@@ -69,6 +77,38 @@ public class  ChatActivity extends AppCompatActivity {
         chatMessage.setDateTime(new Date().getTime());
         chatMessage.setSenderId(senderID);
         chatBinding.inputMessage.setText(null);
+
+        DatabaseReference databaseReference =
+                database.getReference().child(Constants.KEY_COLLECTION_CHAT).child(senderRoom);
+        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.getValue() == null){
+                    database.getReference().child("User").child(myAuth.getUid()).child("recentChat").push().setValue(receiverUser);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+        databaseReference =
+                database.getReference().child(Constants.KEY_COLLECTION_CHAT).child(receiverRoom);
+        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.getValue() == null){
+                    database.getReference().child("User").child(receiverUser.getUserID()).child("recentChat").push().setValue(senderUser);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
 
         database.getReference().child(Constants.KEY_COLLECTION_CHAT).child(senderRoom).push().setValue(chatMessage)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -129,13 +169,18 @@ public class  ChatActivity extends AppCompatActivity {
         databaseReference.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DataSnapshot> task) {
-                if (task.getResult().getValue() == null)
+                if (task.getResult().getValue() == null) {
                     chatBinding.textAvailability.setText("Offline");
+                    chatBinding.textAvailability.setBackgroundColor(Color.rgb(255, 0, 0));
+                }
                 else {
                     if (task.isSuccessful() && task.getResult().getValue() != null) {
                         boolean isOnline = (boolean) task.getResult().getValue();
                         if (isOnline) chatBinding.textAvailability.setText("Online");
-                        else chatBinding.textAvailability.setText("Offline");
+                        else {
+                            chatBinding.textAvailability.setText("Offline");
+                            chatBinding.textAvailability.setBackgroundColor(Color.rgb(255, 0, 0));
+                        }
                     }
                 }
 

@@ -79,7 +79,7 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 //                return false;
 //            }
 //        });
-        // End Delete message
+//         End Delete message
 
     }
 

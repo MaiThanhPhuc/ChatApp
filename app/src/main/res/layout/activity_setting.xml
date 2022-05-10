@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:animateLayoutChanges="true"
     android:background="@color/primary"
-    tools:context=".activities.UsersActivity">
+    tools:context=".activities.SettingActivity">
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/imageBack"
@@ -88,6 +88,62 @@
             android:layout_marginEnd="@dimen/_8sdp"
             android:background="@drawable/background_input"
             android:hint="@string/name"
+            android:imeOptions="actionNext"
+            android:importantForAutofill="no"
+            android:inputType="text"
+            android:paddingStart="@dimen/_16sdp"
+            android:paddingEnd="@dimen/_16sdp"
+            android:textColor="@color/primary_text"
+            android:textSize="@dimen/_13ssp" />
+
+        <TextView
+            android:id="@+id/passwordchange"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_8sdp"
+            android:layout_gravity="left"
+            android:layout_marginStart="@dimen/_8sdp"
+            android:text="@string/new_password"
+            android:textColor="@color/primary_dark"
+            android:textStyle="bold"
+            android:textSize="@dimen/_13ssp" />
+        <EditText
+            android:id="@+id/inputPassword"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_45sdp"
+            android:layout_marginStart="@dimen/_8sdp"
+            android:layout_marginTop="@dimen/_10sdp"
+            android:layout_marginEnd="@dimen/_8sdp"
+            android:background="@drawable/background_input"
+            android:hint="Password"
+            android:imeOptions="actionNext"
+            android:importantForAutofill="no"
+            android:inputType="text"
+            android:paddingStart="@dimen/_16sdp"
+            android:paddingEnd="@dimen/_16sdp"
+            android:textColor="@color/primary_text"
+            android:textSize="@dimen/_13ssp" />
+
+        <TextView
+            android:id="@+id/currentPassword"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_8sdp"
+            android:layout_gravity="left"
+            android:layout_marginStart="@dimen/_8sdp"
+            android:text="@string/current_password"
+            android:textColor="@color/primary_dark"
+            android:textStyle="bold"
+            android:textSize="@dimen/_13ssp" />
+        <EditText
+            android:id="@+id/inputCurrentPassword"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_45sdp"
+            android:layout_marginStart="@dimen/_8sdp"
+            android:layout_marginTop="@dimen/_10sdp"
+            android:layout_marginEnd="@dimen/_8sdp"
+            android:background="@drawable/background_input"
+            android:hint="@string/current_password"
             android:imeOptions="actionNext"
             android:importantForAutofill="no"
             android:inputType="text"
