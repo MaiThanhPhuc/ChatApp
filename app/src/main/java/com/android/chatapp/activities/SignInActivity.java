@@ -12,10 +12,14 @@ import android.widget.Toast;
 import com.android.chatapp.R;
 import com.android.chatapp.databinding.ActivitySignInBinding;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.messaging.FirebaseMessaging;
+
+import java.util.HashMap;
 
 public class SignInActivity extends AppCompatActivity {
     private ActivitySignInBinding signInBinding;
@@ -49,7 +53,21 @@ public class SignInActivity extends AppCompatActivity {
                                 @Override
                                 public void onComplete(@NonNull Task<AuthResult> task) {
                                     dialog.dismiss();
+
                                     if (task.isSuccessful()) {
+                                        FirebaseMessaging.getInstance()
+                                                .getToken()
+                                                .addOnSuccessListener(new OnSuccessListener<String>() {
+                                                    @Override
+                                                    public void onSuccess(String token) {
+                                                        HashMap<String, Object> map = new HashMap<>();
+                                                        map.put("token", token);
+                                                        database.getReference()
+                                                                .child("User")
+                                                                .child(FirebaseAuth.getInstance().getUid())
+                                                                .updateChildren(map);
+                                                    }
+                                                });
                                         Intent accessApp = new Intent(SignInActivity.this, MainActivity.class);
                                         startActivity(accessApp);
                                     }

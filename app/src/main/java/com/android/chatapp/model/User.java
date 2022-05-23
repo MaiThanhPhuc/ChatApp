@@ -6,6 +6,7 @@ public class User {
     String password;
     String email;
     String profilePictureLink;
+    String token;
     boolean isOnline;
 
     public boolean isOnline() {
@@ -14,6 +15,14 @@ public class User {
 
     public void setOnline(boolean online) {
         isOnline = online;
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
     }
 
     public User(String username, String userID, String password, String email) {

@@ -7,7 +7,9 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 
 import com.android.chatapp.R;
 import com.android.chatapp.adapter.ChatAdapter;
@@ -16,6 +18,10 @@ import com.android.chatapp.databinding.ActivityChatBinding;
 import com.android.chatapp.model.ChatMessage;
 import com.android.chatapp.model.User;
 import com.android.chatapp.utilities.Constants;
+import com.android.volley.Request;
+import com.android.volley.*;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -27,10 +33,14 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class  ChatActivity extends AppCompatActivity {
     private ActivityChatBinding chatBinding;
@@ -120,7 +130,7 @@ public class  ChatActivity extends AppCompatActivity {
                                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                                     @Override
                                     public void onSuccess(Void aVoid) {
-
+                                        getToken(chatMessage.getMessage());
                                     }
                                 });
                     }
@@ -190,6 +200,103 @@ public class  ChatActivity extends AppCompatActivity {
         chatBinding.textName.setText(receiverUserName);
 
     }
+
+    private void getToken(String message){
+        DatabaseReference databaseReference = database.getReference("User").child(receiverUser.getUserID());
+        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                String token = snapshot.child("token").getValue().toString();
+                String name = senderUser.getUsername();
+
+                JSONObject to = new JSONObject();
+                JSONObject data = new JSONObject();
+
+                try {
+                    data.put("title", name);
+                    data.put("message",message);
+
+                    to.put("to",token);
+                    to.put("data",data);
+                    
+                    sendNotification(to);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+    }
+
+    private void sendNotification(JSONObject to) {
+//        JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, Constants.NOTIFICATION_URL,to,
+//                response -> {
+//                    Log.d("notification","sendNotification" + response);
+//                }, error ->{
+//                    Log.d("notification","sendNotification" + error);
+//        }){
+//            @Override
+//            public Map<String,String> getHeaders(){
+//                Map<String,String> map = new HashMap<>();
+//                map.put("Authorization", "key=" + Constants.SERVER_KEY);
+//                map.put("Content-Type", "application/json");
+//                return map;
+//            }
+//
+//            @Override
+//            public String getBodyContentType() {
+//                return "application/json";
+//            }
+//        };
+//
+//
+//        RequestQueue requestQueue = Volley.newRequestQueue(this);
+//        request.setRetryPolicy(new DefaultRetryPolicy(30000,
+//                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+//                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+//        requestQueue.add(request);
+
+        try {
+            RequestQueue queue = Volley.newRequestQueue(this);
+
+
+            JsonObjectRequest request = new JsonObjectRequest(Constants.NOTIFICATION_URL, to,
+                    new Response.Listener<JSONObject>() {
+                        @Override
+                        public void onResponse(JSONObject response) {
+//                            Toast.makeText(ChatActivity.this, "Success", Toast.LENGTH_SHORT).show();
+                        }
+                    },
+                    new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            Toast.makeText(ChatActivity.this, error.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                    }) {
+                @Override
+                public Map<String, String> getHeaders() throws AuthFailureError {
+                    HashMap<String, String> map = new HashMap<>();
+                    map.put("Authorization", "key=" + Constants.SERVER_KEY);
+                    map.put("Content-Type", "application/json");
+
+                    return map;
+                }
+            };
+
+            queue.add(request);
+        } catch (Exception ex) {
+
+        }
+
+    }
+
 
     private void setListeners(){
         chatBinding.imageBack.setOnClickListener(e -> backBtn());

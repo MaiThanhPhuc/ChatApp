@@ -13,9 +13,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.ChatApp">
-        <activity
-            android:name=".activities.GroupChatActivity"
-            android:exported="false" />
+
         <activity
             android:name=".activities.SettingActivity"
             android:exported="false" />
@@ -43,6 +41,14 @@
         <activity
             android:name=".activities.MainActivity"
             android:exported="false" />
+
+        <service
+            android:name=".Service.FireBaseNotificationService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
     </application>
 
 </manifest>
