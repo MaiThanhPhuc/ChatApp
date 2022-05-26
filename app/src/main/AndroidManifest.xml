@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.android.chatapp">
+    package="com.topic6gr2.chatapp">
 
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.REQUEST_COMPANION_RUN_IN_BACKGROUND" />
@@ -15,21 +15,21 @@
         android:theme="@style/Theme.ChatApp">
 
         <activity
-            android:name=".activities.SettingActivity"
+            android:name="com.topic6gr2.chatapp.activities.SettingActivity"
             android:exported="false" />
         <activity
-            android:name=".activities.ChatActivity"
+            android:name="com.topic6gr2.chatapp.activities.ChatActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />
         <activity
-            android:name=".activities.UsersActivity"
+            android:name="com.topic6gr2.chatapp.activities.UsersActivity"
             android:exported="false" />
         <activity
-            android:name=".activities.SignUpActivity"
+            android:name="com.topic6gr2.chatapp.activities.SignUpActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />
         <activity
-            android:name=".activities.SignInActivity"
+            android:name="com.topic6gr2.chatapp.activities.SignInActivity"
             android:exported="true"
             android:windowSoftInputMode="adjustResize">
             <intent-filter>
@@ -39,11 +39,11 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".activities.MainActivity"
+            android:name="com.topic6gr2.chatapp.activities.MainActivity"
             android:exported="false" />
 
         <service
-            android:name=".Service.FireBaseNotificationService"
+            android:name="com.topic6gr2.chatapp.Service.FireBaseNotificationService"
             android:exported="false">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
