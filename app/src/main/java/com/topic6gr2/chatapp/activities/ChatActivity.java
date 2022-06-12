@@ -67,8 +67,7 @@ public class  ChatActivity extends AppCompatActivity {
         chatAdapter = new ChatAdapter(chatMessages,this.receiverUser.getProfilePictureLink(),myAuth.getUid());
         chatBinding.chatRecyclerView.setAdapter(chatAdapter);
 
-        LinearLayoutManager layoutManager = new LinearLayoutManager(ChatActivity.this);
-        chatBinding.chatRecyclerView.setLayoutManager(layoutManager);
+
         database.getReference().child("User").child(myAuth.getUid()).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DataSnapshot> task) {
@@ -152,6 +151,11 @@ public class  ChatActivity extends AppCompatActivity {
                         }
                         chatAdapter.notifyDataSetChanged();
                         chatBinding.progressBar.setVisibility(View.INVISIBLE);
+
+                        LinearLayoutManager layoutManager = new LinearLayoutManager(ChatActivity.this);
+                        layoutManager.setStackFromEnd(true);
+                        chatBinding.chatRecyclerView.setLayoutManager(layoutManager);
+                        chatBinding.chatRecyclerView.scrollToPosition(chatAdapter.getItemCount() - 1);
                     }
 
                     @Override

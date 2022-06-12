@@ -71,7 +71,7 @@ public class SignInActivity extends AppCompatActivity {
                                         startActivity(accessApp);
                                     }
                                     else {
-                                        Toast.makeText(SignInActivity.this,  task.getException().toString(), Toast.LENGTH_LONG).show();
+                                        Toast.makeText(SignInActivity.this,  "Incorrect email or password", Toast.LENGTH_LONG).show();
                                     }
                                 }
                             });
